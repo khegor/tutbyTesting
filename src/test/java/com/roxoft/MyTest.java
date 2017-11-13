@@ -24,12 +24,12 @@ public class MyTest extends AbstractTest {
     @Test(dataProvider = "SingleDataProvider")
     @MethodOwner(owner = "egorh")
     @XlsDataSourceParameters(path = "xls/demo.xls", sheet = "demo", dsUid = "TUID", dsArgs = "name, surname, mail")
-    public void registrationTest(String name, String surname, String email) {
+    public void registrationTest(String name, String surname, String mail) {
 
         RegistrationService registrationService = new RegistrationService();
         registrationService.openPage();
         registrationService.clickRegButton();
-        registrationService.registrationTest(name, surname, email, "1234", "25.03.1992", "Minskas", "5502964");
+        registrationService.registrationTest(name, surname, mail, "1234", "25.03.1992", "Minskas", "5502964");
         registrationService.clickMailingButton();
         registrationService.finishRegistration();
     }
