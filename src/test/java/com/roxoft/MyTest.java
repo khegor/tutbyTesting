@@ -7,6 +7,7 @@ import com.roxoft.tutby.MainPage;
 import com.roxoft.tutby.RegisterPage;
 import com.roxoft.tutby.dao.MybatisRegistrationData;
 import com.roxoft.tutby.models.RegistrationData;
+import com.roxoft.tutby.service.RegistrationService;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -24,45 +25,30 @@ public class MyTest extends AbstractTest {
     @MethodOwner(owner = "egorh")
     @XlsDataSourceParameters(path = "xls/demo.xls", sheet = "demo", dsUid = "TUID", dsArgs = "name, surname, mail")
     public void registrationTest(String name, String surname, String email) {
-        MainPage mainPage = new MainPage(getDriver());
-        mainPage.open();
-        Assert.assertTrue(mainPage.isPageOpened(), "Main page is not opened");
-        mainPage.clickLoginButton();
-        RegisterPage registerPage = mainPage.clickRegistrationButton();
-        registerPage.enterEmail("eg@gmail");
-        registerPage.enterPass("1234");
-        registerPage.enterFio(name);
-        registerPage.enterDateOfBirth("25.03.1992");
-        registerPage.clickGender();
-        registerPage.enterAddress("Minsk");
-        registerPage.enterPhoneNumber("2502525");
-        registerPage.enterCode("UA");
-        registerPage.clickMailingButton();
-        registerPage.clickRegistrationButton();
+
+        RegistrationService registrationService = new RegistrationService();
+        registrationService.openPage();
+        registrationService.clickRegButton();
+        registrationService.registrationTest(name, surname, email, "1234", "25.03.1992", "Minskas", "5502964");
+        registrationService.clickMailingButton();
+        registrationService.finishRegistration();
     }
 
     @Test(dataProvider = "MyDataProvider")
     @MethodOwner(owner = "egorh")
     public void registrationTestWithDataPrvider(String name, String surname, String mail) {
-        MainPage mainPage = new MainPage(getDriver());
-        mainPage.open();
-        Assert.assertTrue(mainPage.isPageOpened(), "Main page is not opened");
-        mainPage.clickLoginButton();
-        RegisterPage registerPage = mainPage.clickRegistrationButton();
-        registerPage.enterEmail(mail);
-        registerPage.enterPass("1234");
-        registerPage.enterFio(name + " " + surname);
-        registerPage.enterDateOfBirth("25.03.1992");
-        registerPage.clickGender();
-        registerPage.enterAddress("Minsk");
-        registerPage.enterPhoneNumber("2502525");
-        registerPage.enterCode("UA");
-        registerPage.clickMailingButton();
-        registerPage.clickRegistrationButton();
+
+        RegistrationService registrationService = new RegistrationService();
+        registrationService.openPage();
+        registrationService.clickRegButton();
+        registrationService.registrationTest(name, surname, mail, "1234", "25.03.1992", "Minsk", "5502964");
+        registrationService.clickMailingButton();
+        registrationService.finishRegistration();
     }
 
     @DataProvider(name = "MyDataProvider")
     public Object[][] getData() {
+
         return new Object[][]{
                 {"egor", "khegor", "egor1234@gmail.com"},
                 {"egorka", "ananas", "egorkaananas@huimail.com"}
@@ -74,24 +60,26 @@ public class MyTest extends AbstractTest {
     public void registrationTestWithDB() {
 
         MybatisRegistrationData mybatisRegistrationData = new MybatisRegistrationData();
-        RegistrationData registrationData = new RegistrationData();
-        List<RegistrationData>regData = mybatisRegistrationData.getAllRegistartionData();
-        for(RegistrationData r : regData) {
-            MainPage mainPage = new MainPage(getDriver());
-            mainPage.open();
-            Assert.assertTrue(mainPage.isPageOpened(), "Main page is not opened");
-            mainPage.clickLoginButton();
-            RegisterPage registerPage = mainPage.clickRegistrationButton();
-            registerPage.enterEmail(r.getMail());
-            registerPage.enterPass("1234");
-            registerPage.enterFio(r.getName() + " " + r.getSurname());
-            registerPage.enterDateOfBirth("25.03.1992");
-            registerPage.clickGender();
-            registerPage.enterAddress("Minsk");
-            registerPage.enterPhoneNumber("2502525");
-            registerPage.enterCode("UA");
-            registerPage.clickMailingButton();
-            registerPage.clickRegistrationButton();
+        List<RegistrationData> regData = mybatisRegistrationData.getAllRegistartionData();
+        for (RegistrationData r : regData) {
+            RegistrationService registrationService = new RegistrationService();
+            registrationService.openPage();
+            registrationService.clickRegButton();
+            registrationService.registrationTest(r.getName(), r.getSurname(), r.getMail(), "1234", "25.03.1992", "Minsk", "5502964");
+            registrationService.clickMailingButton();
+            registrationService.finishRegistration();
         }
+    }
+
+    @Test
+    @MethodOwner(owner = "egorh")
+    public void registrationTestLast() {
+
+        RegistrationService registrationService = new RegistrationService();
+        registrationService.openPage();
+        registrationService.clickRegButton();
+        registrationService.registrationTest("egor", "khegor", "khegorshmegor", "1234", "25.03.1992", "minsk", "5502964");
+        registrationService.clickMailingButton();
+        registrationService.finishRegistration();
     }
 }
