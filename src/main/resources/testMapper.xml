@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="testMapper">
+    <select id="getAllRegistartionData" resultMap="testMap">
+        SELECT R.ID, R.EXECUTE, R.NAME, R.SURNAME, R.MAIL FROM registration_data R;
+    </select>
+    <resultMap id="testMap" type="com.roxoft.tutby.models.RegistrationData" autoMapping="false">
+        <id property="id" column="ID"/>
+        <result property="execute" column="EXECUTE"/>
+        <result property="name" column="NAME"/>
+        <result property="surname" column="SURNAME"/>
+        <result property="mail" column="MAIL"/>
+    </resultMap>
+</mapper>
